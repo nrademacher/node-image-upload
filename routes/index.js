@@ -3,7 +3,7 @@ const router = require('express').Router(),
   imageRoutes = require('./imageRoutes');
 
 router
-  .get('/', (req, res) => {
+  .get('/server', (req, res) => {
     res.send('Image upload server online');
   })
   .use('/images', imageRoutes)
