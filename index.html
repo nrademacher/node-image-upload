@@ -7,8 +7,8 @@
   <body>
     <h1>Upload Image</h1>
 
-    <form action="http://localhost:3000/upload" method="post" enctype="multipart/form-data">
-      <input type="file" accept="image/jpeg" name="photo" />
+    <form action="http://localhost:3000/images/postImages" method="post" enctype="multipart/form-data">
+      <input type="file" accept="image/*" name="photo" />
       <input type="submit" value="upload" />
     </form>
   </body>
