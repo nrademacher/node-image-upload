@@ -1,8 +1,10 @@
 require('dotenv').config();
-const express = require('express'),
-    app = express(),
-    cors = require('cors');
-(mongoose = require('mongoose')), (router = require('./routes/index'));
+const express = require('express');
+const app = express();
+const cors = require('cors');
+const mongoose = require('mongoose');
+const morgan = require('morgan');
+const router = require('./routes/index');
 
 const MONGO_URI = process.env.MONGO_URI;
 mongoose.connect(MONGO_URI, {
@@ -10,11 +12,12 @@ mongoose.connect(MONGO_URI, {
     useUnifiedTopology: true,
 });
 
-// Assign Mongoose connection to the variable db
 let db = mongoose.connection;
 db.on('open', () => {
     console.log('Connected to MongoDB using Mongoose');
 });
+
+process.env.NODE_ENV === 'development' && app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false }))
     .use(express.json())
     .use(cors())
