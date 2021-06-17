@@ -40,7 +40,6 @@ module.exports = {
                                 res.json({
                                     success: true,
                                     data: image,
-                                  result
                                 });
                             })
                             .catch((error) => {

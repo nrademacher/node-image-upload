@@ -15,9 +15,13 @@ router
         <h1>Upload Image</h1>
         <form action="https://dry-shore-64957.herokuapp.com/images/postImages" method="post" enctype="multipart/form-data">
           <input type="text" placeholder="Album" name="album" required />
+          <br />
           <input type="text" placeholder="Title" name="title" required />
+          <br />
           <input type="text" placeholder="Location (optional)" name="location" />
+          <br />
           <input type="file" accept="image/*" name="photo" required />
+          <br />
           <input type="submit" value="upload" />
         </form>
       </body>
