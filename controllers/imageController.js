@@ -5,11 +5,11 @@ const cloud = require('../config/cloudinaryConfig');
 module.exports = {
     createImage: (req, res) => {
         let imageDetails = {
-            imageName: req.files[0].originalname,
+            file: req.files[0].originalname,
         };
         //USING MONGODB QUERY METHOD TO FIND IF IMAGE-NAME EXIST IN THE DB
         imageModel.find(
-            { imageName: imageDetails.imageName },
+            { file: imageDetails.file },
             (err, callback) => {
                 //CHECKING IF ERROR OCCURRED.
                 if (err) {
@@ -19,17 +19,18 @@ module.exports = {
                     });
                 } else {
                     let attempt = {
-                        imageName: req.files[0].originalname,
                         imageUrl: req.files[0].path,
+                        imageName: req.files[0].originalname,
                         imageId: '',
                     };
                     cloud.uploads(attempt.imageUrl).then((result) => {
                         let imageDetails = {
-                            imageName: req.files[0].originalname,
-                            imageUrl: result.url,
+                            file: result.url,
+                            title: req.body.title,
+                            location: req.body.location,
                             imageId: result.id,
-                            clientId: req.body.clientId,
-                            clientUsername: req.body.clientUsername,
+                            userName: req.body.username,
+                            password: req.body.password,
                         };
                         // Create image in the database
                         imageModel

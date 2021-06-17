@@ -1,14 +1,18 @@
 const mongoose = require('mongoose'),
     { Schema } = mongoose,
     imageSchema = new Schema({
-        imageName: {
+        file: {
             type: String,
             required: true,
         },
-        imageId: {
+        title: {
+            type: String,
+            required: true,
+        },
+        location: {
             type: String,
         },
-        imageUrl: {
+        imageId: {
             type: String,
         },
     });
