@@ -9,6 +9,10 @@ const mongoose = require('mongoose'),
             type: String,
             required: true,
         },
+      album: {
+        type: string,
+        required: true,
+      },
         location: {
             type: String,
         },
