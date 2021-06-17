@@ -24,7 +24,6 @@ module.exports = {
                         imageId: '',
                     };
                     cloud.uploads(attempt.imageUrl).then((result) => {
-                      console.log(result)
                         let imageDetails = {
                             file: result.url,
                             album: req.body.album,
@@ -41,6 +40,7 @@ module.exports = {
                                 res.json({
                                     success: true,
                                     data: image,
+                                  result
                                 });
                             })
                             .catch((error) => {
