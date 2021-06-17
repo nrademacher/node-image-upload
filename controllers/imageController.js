@@ -24,6 +24,7 @@ module.exports = {
                         imageId: '',
                     };
                     cloud.uploads(attempt.imageUrl).then((result) => {
+                      console.log(result)
                         let imageDetails = {
                             file: result.url,
                             album: req.body.album,
