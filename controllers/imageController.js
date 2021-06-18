@@ -1,16 +1,16 @@
 const imageModel = require('../models/imageModel');
-const { db } = require('../server');
+const mongoose = require('mongoose')
 //IMPORT CLOUDINARY CONFIG
 const cloud = require('../config/cloudinaryConfig');
 
 module.exports = {
   createImage: async (req, res) => {
-    const admins = db.db.collection('admins');
+    const admins = mongoose.connection.db.collection('admins');
     const admin = await admins.findOne({ password: req.body.password });
     if (!admin) {
       res.json({
         error: 'Unauthorized',
-        message: 'Password did not match any admin.',
+        message: 'Admin password did not match.',
       });
     }
     let imageDetails = {
