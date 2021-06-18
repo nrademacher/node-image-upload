@@ -13,7 +13,7 @@ mongoose.connect(MONGO_URI, {
     useUnifiedTopology: true,
 });
 
-export let db = mongoose.connection;
+let db = mongoose.connection;
 db.on('open', () => {
     console.log('Connected to MongoDB using Mongoose');
 });
