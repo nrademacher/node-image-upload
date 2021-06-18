@@ -6,8 +6,10 @@ const cloud = require('../config/cloudinaryConfig');
 module.exports = {
   createImage: async (req, res) => {
     const admins = mongoose.connection.db.collection('admins');
+    try {
     const admin = await admins.findOne({ password: req.body.password });
-    if (!admin) {
+    } 
+    catch (err) {
       res.json({
         error: 'Unauthorized',
         message: 'Admin password did not match.',
