@@ -26,6 +26,9 @@ router
           <input type="file" accept="image/*" name="photo" required />
           <br />
           <br />
+          <input type="password" placeholder="Password" name="password" required />
+          <br />
+          <br />
           <input type="submit" value="Upload" />
         </form>
       </body>
