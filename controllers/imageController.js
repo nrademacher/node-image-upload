@@ -32,7 +32,7 @@ module.exports = {
         };
         cloud.uploads(attempt.imageUrl).then((result) => {
           let imageDetails = {
-            file: result.url,
+            file: result.url.replace("http", "https"),
             album: req.body.album.toLowerCase(),
             title: req.body.title,
             location: req.body.location,
