@@ -42,8 +42,7 @@ module.exports = {
           };
           // Create image in the database
           const match = await imageModel.findOne({
-            title: imageDetails.title,
-            album: imageDetails.album,
+            file: imageDetails.file,
           });
           if (match) {
             imageModel
