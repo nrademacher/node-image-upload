@@ -47,7 +47,7 @@ module.exports = {
           });
           if (match) {
             imageModel
-              .findOneAndReplace(match, imageDetails)
+              .updateOne(match, imageDetails)
               .then((image) => {
                 res.json({
                   success: true,
