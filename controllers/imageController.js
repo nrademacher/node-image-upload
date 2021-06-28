@@ -1,5 +1,5 @@
 const imageModel = require('../models/imageModel');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 //IMPORT CLOUDINARY CONFIG
 const cloud = require('../config/cloudinaryConfig');
 
@@ -17,7 +17,7 @@ module.exports = {
       file: req.files[0].originalname,
     };
     //USING MONGODB QUERY METHOD TO FIND IF IMAGE-NAME EXIST IN THE DB
-    imageModel.find({ file: imageDetails.file }, (err, callback) => {
+    imageModel.find({ file: imageDetails.file }, async (err, callback) => {
       //CHECKING IF ERROR OCCURRED.
       if (err) {
         res.json({
@@ -41,20 +41,41 @@ module.exports = {
             password: req.body.password,
           };
           // Create image in the database
-          imageModel
-            .create(imageDetails)
-            .then((image) => {
-              res.json({
-                success: true,
-                data: image,
+          const match = await imageModel.findOne({
+            title: imageDetails.title,
+            album: imageDetails.album,
+          });
+          if (match) {
+            imageModel
+              .findOneAndReplace(match, imageDetails)
+              .then((image) => {
+                res.json({
+                  success: true,
+                  data: image,
+                });
+              })
+              .catch((error) => {
+                res.json({
+                  success: false,
+                  message: `Error creating image in the database: ${error.message}`,
+                });
               });
-            })
-            .catch((error) => {
-              res.json({
-                success: false,
-                message: `Error creating image in the database: ${error.message}`,
+          } else {
+            imageModel
+              .create(imageDetails)
+              .then((image) => {
+                res.json({
+                  success: true,
+                  data: image,
+                });
+              })
+              .catch((error) => {
+                res.json({
+                  success: false,
+                  message: `Error creating image in the database: ${error.message}`,
+                });
               });
-            });
+          }
         });
       }
     });
