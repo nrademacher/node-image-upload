@@ -17,7 +17,7 @@ module.exports = {
       file: req.files[0].originalname,
     };
     //USING MONGODB QUERY METHOD TO FIND IF IMAGE-NAME EXIST IN THE DB
-    imageModel.find({ file: imageDetails.file }, async (err, callback) => {
+    imageModel.find({ file: imageDetails.file }, (err, callback) => {
       //CHECKING IF ERROR OCCURRED.
       if (err) {
         res.json({
@@ -30,7 +30,7 @@ module.exports = {
           imageName: req.files[0].originalname,
           imageId: '',
         };
-        cloud.uploads(attempt.imageUrl).then((result) => {
+        cloud.uploads(attempt.imageUrl).then(async (result) => {
           let imageDetails = {
             file: result.url,
             album: req.body.album.toLowerCase(),
