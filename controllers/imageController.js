@@ -5,16 +5,6 @@ const cloud = require('../config/cloudinaryConfig');
 
 module.exports = {
   createImage: async (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader(
-      'Access-Control-Allow-Methods',
-      'GET, POST, OPTIONS, PUT, PATCH, DELETE'
-    ); // If needed
-    res.setHeader(
-      'Access-Control-Allow-Headers',
-      'X-Requested-With,content-type'
-    ); // If needed
-    res.setHeader('Access-Control-Allow-Credentials', true); // If needed
     const admins = mongoose.connection.db.collection('admins');
     const admin = await admins.findOne({ password: req.body.password });
     if (!admin) {
