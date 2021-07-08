@@ -1,11 +1,10 @@
 const imageModel = require('../models/imageModel');
 const mongoose = require('mongoose');
 const cloud = require('../config/cloudinaryConfig');
-const { CSRF_TOKEN } = require('../config/constants');
 
 module.exports = {
   createImage: async (req, res) => {
-    if (req.body.token !== CSRF_TOKEN) {
+    if (req.body.secret !== process.env.UPLOAD_SECRET) {
       return res.json({
         error: 'Unauthorized',
       });
@@ -49,7 +48,6 @@ module.exports = {
                 res.json({
                   success: true,
                   data: image,
-                  token: req.body.token,
                 });
               })
               .catch((error) => {
