@@ -22,7 +22,7 @@ process.env.NODE_ENV === 'development' && app.use(morgan('dev'));
 app
   .use(express.urlencoded({ extended: false }))
   .use(express.json())
-  .use(cors({ origin: 'https://www.katjaschmelzer.de/upload' }))
+  .use(cors({ origin: '*' }))
   //Index route
   .use('/', router)
   .set('port', process.env.PORT || 8000)
