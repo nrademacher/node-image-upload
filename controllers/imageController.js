@@ -2,17 +2,15 @@ const imageModel = require('../models/imageModel');
 const mongoose = require('mongoose');
 //IMPORT CLOUDINARY CONFIG
 const cloud = require('../config/cloudinaryConfig');
+const { CSRF_TOKEN } = require('../config/constants');
 
 module.exports = {
   createImage: async (req, res) => {
-    /* const admins = mongoose.connection.db.collection('admins');
-    const admin = await admins.findOne({ password: req.body.password });
-    if (!admin) {
+    if (!req.body.token === CSRF_TOKEN) {
       return res.json({
         error: 'Unauthorized',
-        message: 'Admin password did not match.',
       });
-    } */
+    }
     let imageDetails = {
       file: req.files[0].originalname,
     };
