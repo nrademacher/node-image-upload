@@ -13,8 +13,8 @@ module.exports = {
     if (!req.files[0]) {
       let item = {
         album: req.body.album.toLowerCase(),
-        title: req.body.title,
-        location: req.body.location,
+        title: req.body.newTitle,
+        location: req.body.newLocation,
       };
       console.log(item);
       const match = await imageModel.findOne({
