@@ -10,7 +10,7 @@ module.exports = {
       });
     }
     let imageDetails;
-    if (req.files) {
+    if (req.files[0]) {
       imageDetails = {
         file: req.files[0].originalname,
       };
