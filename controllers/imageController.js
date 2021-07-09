@@ -15,9 +15,31 @@ module.exports = {
         file: req.files[0].originalname,
       };
     } else {
-      imageDetails = {
-        file: 'currentEdit',
+      let item = {
+        album: req.body.album.toLowerCase(),
+        title: req.body.title,
+        location: req.body.location,
       };
+      const match = await imageModel.findOne({
+        title: item.title,
+        album: item.album,
+      });
+      if (match) {
+        imageModel
+          .updateOne(match, item)
+          .then((image) => {
+            return res.json({
+              success: true,
+              data: image,
+            });
+          })
+          .catch((error) => {
+            return res.json({
+              success: false,
+              message: `Error creating image in the database: ${error.message}`,
+            });
+          });
+      }
     }
     //USING MONGODB QUERY METHOD TO FIND IF IMAGE-NAME EXIST IN THE DB
     imageModel.find({ file: imageDetails.file }, async (err, callback) => {
@@ -28,19 +50,42 @@ module.exports = {
           message: `There was a problem creating the image because: ${err.message}`,
         });
       } else {
-        if (imageDetails.file === 'currentEdit') {
-          let item = {
+        let attempt = {
+          imageUrl: req.files[0].path,
+          imageName: req.files[0].originalname,
+          imageId: '',
+        };
+        cloud.uploads(attempt.imageUrl).then(async (result) => {
+          let imageDetails = {
+            file: result.url,
             album: req.body.album.toLowerCase(),
             title: req.body.title,
             location: req.body.location,
+            imageId: result.id,
           };
+          // Create image in the database
           const match = await imageModel.findOne({
-            title: item.title,
-            album: item.album,
+            title: imageDetails.title,
+            album: imageDetails.album,
           });
           if (match) {
             imageModel
-              .updateOne(match, item)
+              .updateOne(match, imageDetails)
+              .then((image) => {
+                res.json({
+                  success: true,
+                  data: image,
+                });
+              })
+              .catch((error) => {
+                res.json({
+                  success: false,
+                  message: `Error creating image in the database: ${error.message}`,
+                });
+              });
+          } else {
+            imageModel
+              .create(imageDetails)
               .then((image) => {
                 res.json({
                   success: true,
@@ -54,58 +99,7 @@ module.exports = {
                 });
               });
           }
-        } else {
-          let attempt = {
-            imageUrl: req.files[0].path,
-            imageName: req.files[0].originalname,
-            imageId: '',
-          };
-          cloud.uploads(attempt.imageUrl).then(async (result) => {
-            let imageDetails = {
-              file: result.url,
-              album: req.body.album.toLowerCase(),
-              title: req.body.title,
-              location: req.body.location,
-              imageId: result.id,
-            };
-            // Create image in the database
-            const match = await imageModel.findOne({
-              title: imageDetails.title,
-              album: imageDetails.album,
-            });
-            if (match) {
-              imageModel
-                .updateOne(match, imageDetails)
-                .then((image) => {
-                  res.json({
-                    success: true,
-                    data: image,
-                  });
-                })
-                .catch((error) => {
-                  res.json({
-                    success: false,
-                    message: `Error creating image in the database: ${error.message}`,
-                  });
-                });
-            } else {
-              imageModel
-                .create(imageDetails)
-                .then((image) => {
-                  res.json({
-                    success: true,
-                    data: image,
-                  });
-                })
-                .catch((error) => {
-                  res.json({
-                    success: false,
-                    message: `Error creating image in the database: ${error.message}`,
-                  });
-                });
-            }
-          });
-        }
+        });
       }
     });
   },
