@@ -10,11 +10,7 @@ module.exports = {
       });
     }
     let imageDetails;
-    if (req.files[0]) {
-      imageDetails = {
-        file: req.files[0].originalname,
-      };
-    } else {
+    if (!req.files[0]) {
       let item = {
         album: req.body.album.toLowerCase(),
         title: req.body.title,
@@ -28,18 +24,23 @@ module.exports = {
         imageModel
           .updateOne(match, item)
           .then((image) => {
-            return res.json({
+            res.json({
               success: true,
               data: image,
             });
           })
           .catch((error) => {
-            return res.json({
+            res.json({
               success: false,
               message: `Error creating image in the database: ${error.message}`,
             });
           });
+        return true;
       }
+    } else {
+      imageDetails = {
+        file: req.files[0].originalname,
+      };
     }
     //USING MONGODB QUERY METHOD TO FIND IF IMAGE-NAME EXIST IN THE DB
     imageModel.find({ file: imageDetails.file }, async (err, callback) => {
