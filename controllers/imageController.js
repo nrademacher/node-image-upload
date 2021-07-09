@@ -9,9 +9,16 @@ module.exports = {
         error: 'Unauthorized',
       });
     }
-    let imageDetails = {
-      file: req.files[0].originalname,
-    };
+    let imageDetails;
+    if (req.files[0].originalname) {
+      imageDetails = {
+        file: req.files[0].originalname,
+      };
+    } else {
+      imageDetails = {
+        file: 'currentEdit',
+      };
+    }
     //USING MONGODB QUERY METHOD TO FIND IF IMAGE-NAME EXIST IN THE DB
     imageModel.find({ file: imageDetails.file }, (err, callback) => {
       //CHECKING IF ERROR OCCURRED.
@@ -21,22 +28,12 @@ module.exports = {
           message: `There was a problem creating the image because: ${err.message}`,
         });
       } else {
-        let attempt = {
-          imageUrl: req.files[0].path,
-          imageName: req.files[0].originalname,
-          imageId: '',
-        };
-        cloud.uploads(attempt.imageUrl).then(async (result) => {
+        if (imageDetails.file === 'currentEdit') {
           let imageDetails = {
-            file: result.url,
             album: req.body.album.toLowerCase(),
             title: req.body.title,
             location: req.body.location,
-            imageId: result.id,
-            userName: req.body.username,
-            password: req.body.password,
           };
-          // Create image in the database
           const match = await imageModel.findOne({
             title: imageDetails.title,
             album: imageDetails.album,
@@ -56,23 +53,59 @@ module.exports = {
                   message: `Error creating image in the database: ${error.message}`,
                 });
               });
-          } else {
-            imageModel
-              .create(imageDetails)
-              .then((image) => {
-                res.json({
-                  success: true,
-                  data: image,
-                });
-              })
-              .catch((error) => {
-                res.json({
-                  success: false,
-                  message: `Error creating image in the database: ${error.message}`,
-                });
-              });
           }
-        });
+        } else {
+          let attempt = {
+            imageUrl: req.files[0].path,
+            imageName: req.files[0].originalname,
+            imageId: '',
+          };
+          cloud.uploads(attempt.imageUrl).then(async (result) => {
+            let imageDetails = {
+              file: result.url,
+              album: req.body.album.toLowerCase(),
+              title: req.body.title,
+              location: req.body.location,
+              imageId: result.id,
+            };
+            // Create image in the database
+            const match = await imageModel.findOne({
+              title: imageDetails.title,
+              album: imageDetails.album,
+            });
+            if (match) {
+              imageModel
+                .updateOne(match, imageDetails)
+                .then((image) => {
+                  res.json({
+                    success: true,
+                    data: image,
+                  });
+                })
+                .catch((error) => {
+                  res.json({
+                    success: false,
+                    message: `Error creating image in the database: ${error.message}`,
+                  });
+                });
+            } else {
+              imageModel
+                .create(imageDetails)
+                .then((image) => {
+                  res.json({
+                    success: true,
+                    data: image,
+                  });
+                })
+                .catch((error) => {
+                  res.json({
+                    success: false,
+                    message: `Error creating image in the database: ${error.message}`,
+                  });
+                });
+            }
+          });
+        }
       }
     });
   },
