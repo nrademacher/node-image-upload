@@ -20,7 +20,7 @@ module.exports = {
       };
     }
     //USING MONGODB QUERY METHOD TO FIND IF IMAGE-NAME EXIST IN THE DB
-    imageModel.find({ file: imageDetails.file }, (err, callback) => {
+    imageModel.find({ file: imageDetails.file }, async (err, callback) => {
       //CHECKING IF ERROR OCCURRED.
       if (err) {
         res.json({
