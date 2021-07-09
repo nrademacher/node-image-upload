@@ -16,10 +16,12 @@ module.exports = {
         title: req.body.title,
         location: req.body.location,
       };
+      console.log(item);
       const match = await imageModel.findOne({
         title: item.title,
         album: item.album,
       });
+      console.log(match);
       if (match) {
         imageModel
           .updateOne(match, item)
