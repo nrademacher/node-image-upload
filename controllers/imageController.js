@@ -18,7 +18,7 @@ module.exports = {
       };
       console.log(item);
       const match = await imageModel.findOne({
-        title: item.oldTitle,
+        title: req.body.oldTitle,
         album: item.album,
       });
       console.log(match);
