@@ -35,8 +35,8 @@ module.exports = {
               message: `Error creating image in the database: ${error.message}`,
             });
           });
-        return true;
       }
+      return true;
     } else {
       imageDetails = {
         file: req.files[0].originalname,
