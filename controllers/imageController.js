@@ -29,18 +29,18 @@ module.exports = {
         });
       } else {
         if (imageDetails.file === 'currentEdit') {
-          let imageDetails = {
+          let item = {
             album: req.body.album.toLowerCase(),
             title: req.body.title,
             location: req.body.location,
           };
           const match = await imageModel.findOne({
-            title: imageDetails.title,
-            album: imageDetails.album,
+            title: item.title,
+            album: item.album,
           });
           if (match) {
             imageModel
-              .updateOne(match, imageDetails)
+              .updateOne(match, item)
               .then((image) => {
                 res.json({
                   success: true,
